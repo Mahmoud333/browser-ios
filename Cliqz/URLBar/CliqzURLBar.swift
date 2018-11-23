@@ -88,6 +88,14 @@ class CliqzURLBar: URLBarView {
         return pageOptionsButton
     }()
     
+    lazy var blurredEffectView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .light)//best > : .regular, .light, prominent, .extraLight, .dark
+        let blurredEffectView = UIVisualEffectView(effect: blurEffect)
+        blurredEffectView.frame = self.bounds
+        
+        return blurredEffectView
+    }()
+    
     @objc func SELdidClickGhosty(button: UIButton) {
         debugPrint("pressed ghosty")
 		NotificationCenter.default.post(name: Notification.Name.GhosteryButtonPressed, object: self.currentURL?.absoluteString)
@@ -110,6 +118,15 @@ class CliqzURLBar: URLBarView {
         }
         if pageOptionsButton.superview == nil {
             addSubview(pageOptionsButton)
+        }
+        
+        self.addSubview(blurredEffectView)
+        self.sendSubview(toBack: blurredEffectView)
+        blurredEffectView.snp.makeConstraints { make in
+            make.top.equalTo(self.snp.top).offset(-20)
+            make.bottom.equalTo(self.snp.bottom)
+            make.right.equalTo(self.snp.right)
+            make.left.equalTo(self.snp.left)
         }
         
         line.snp.makeConstraints { make in

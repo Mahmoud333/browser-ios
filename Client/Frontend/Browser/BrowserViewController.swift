@@ -669,7 +669,8 @@ class BrowserViewController: UIViewController {
         webViewContainer.snp.remakeConstraints { make in
             make.left.right.equalTo(self.view)
 
-            if let readerModeBarBottom = readerModeBar?.snp.bottom {
+            //OLD
+            /*if let readerModeBarBottom = readerModeBar?.snp.bottom {
                 make.top.equalTo(readerModeBarBottom)
             } else {
                 make.top.equalTo(self.header.snp.bottom)
@@ -680,8 +681,12 @@ class BrowserViewController: UIViewController {
                 make.bottom.equalTo(toolbar.snp.top).offset(-findInPageHeight)
             } else {
                 make.bottom.equalTo(self.view).offset(-findInPageHeight)
-            }
+            }*/
+            //New: Take the whole screen
+            make.top.equalTo(self.view.snp.top)
+            make.bottom.equalTo(self.view.snp.bottom)
         }
+ 
 
         // Setup the bottom toolbar
         toolbar?.snp.remakeConstraints { make in
@@ -1843,6 +1848,9 @@ extension BrowserViewController: TabToolbarDelegate, PhotonActionSheetProtocol {
 extension BrowserViewController: TabDelegate {
     func tab(_ tab: Tab, didCreateWebView webView: WKWebView) {
         webView.frame = webViewContainer.frame
+        //New: Add contentInset at Top & bottom
+        webView.scrollView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 40, right: 0)
+        
         // Observers that live as long as the tab. Make sure these are all cleared in willDeleteWebView below!
         KVOs.forEach { webView.addObserver(self, forKeyPath: $0.rawValue, options: .new, context: nil) }
         webView.scrollView.addObserver(self.scrollController, forKeyPath: KVOConstants.contentSize.rawValue, options: .new, context: nil)
